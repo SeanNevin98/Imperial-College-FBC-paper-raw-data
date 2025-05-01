@@ -26,8 +26,8 @@ setwd(input_filepath)
 
 # Read in and wrangle Viral Load data
 data <- read_excel("GitHub Repository - FBC paper raw data.xlsx", sheet = "raw_data") %>%
-  mutate_all(~ifelse(. == ".", NA, .)) %>%                            # Replace "." with NA
-  select(ID_no, vload_PP:vload_Conv) %>%
+  mutate_all(~ifelse(. == ".", NA, .)) %>% # Replace "." with NA
+  dplyr::select(ID_no, vload_PP:vload_Conv) %>%
   melt(id.vars = "ID_no", variable.name = "variable") %>%
   mutate(
     value = as.numeric(value),
@@ -434,6 +434,72 @@ print(FigS1)
 
 setwd(output_filepath)
 ggsave("FBC PlosOne sup Fig1.png", width=13, height=16, dpi=600)
+
+
+
+
+
+
+
+
+
+#Plot FigS2
+#Ppts with the greatest decrease in Mean Platelet volume at FP+7 see
+#the greatest increase in platelet count at FP+14
+df <- read_excel("GitHub Repository - FBC paper raw data.xlsx")
+
+df <- df %>% 
+  mutate_all(~ifelse(. == ".", NA, .)) %>% 
+  mutate_at(c(1:77), as.numeric)
+
+my_theme <- theme_classic(base_size = 12) +
+  theme(text = element_text(face = "bold"),
+        panel.border = element_rect(colour = "black",
+                                    fill = NA, 
+                                    linewidth = 2))
+
+ggplot(data = df, aes(x = `MPV_FP+7`, y = `Platelets_FP+14`)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  stat_cor(aes(label = paste(..rr.label.., ..r.label.., ..p.label.., sep = "~`,`~")), 
+           method = "pearson", size = 6) +
+  my_theme +
+  labs(title = "Correlation between MPV at FP+7 and Platelet count at FP+14",
+       x = "Mean Platelet Volume at FP+7", 
+       y = "Platelet count at FP+14") +
+  canvas(7, 6, units = "in")
+
+setwd(output_filepath)
+ggsave("FBC PlosOne sup Fig2.png", width=7, height=6, dpi=600)
+
+
+# Run linear regression
+model <- lm(`Platelets_FP+14` ~ `MPV_FP+7`, data = df)
+summary(model)
+
+# Regression coefficients with SE and p-values
+coefs <- summary(model)$coefficients
+
+# Confidence intervals
+confint_vals <- confint(model)
+
+# R-squared and adjusted R-squared
+r_squared <- summary(model)$r.squared
+adj_r_squared <- summary(model)$adj.r.squared
+
+# Combine into one data frame
+results <- cbind(
+  Estimate = coefs[, "Estimate"],
+  Std_Error = coefs[, "Std. Error"],
+  p_value = coefs[, "Pr(>|t|)"],
+  CI_lower = confint_vals[, 1],
+  CI_upper = confint_vals[, 2]
+)
+
+print(round(results, 4))
+cat("R-squared:", round(r_squared, 4), "\n")
+cat("Adjusted R-squared:", round(adj_r_squared, 4), "\n")
+
 
 
 # END OF SCRIPT -----------------------------------------------------------
