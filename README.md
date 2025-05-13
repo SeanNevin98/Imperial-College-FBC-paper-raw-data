@@ -25,7 +25,7 @@ Also included is R code used to produce the figures for the manuscript published
 
 ## Usage
 
-Run the R scripts in order to reproduce the plots from the manuscript. File naming corresponds to figure numbers in the paper.
+Run the R scripts in order to reproduce the figures from the manuscript. File naming corresponds to figure numbers in the paper.
 
 ## License
 
