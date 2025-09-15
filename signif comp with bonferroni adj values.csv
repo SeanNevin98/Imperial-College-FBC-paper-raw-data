@@ -1,0 +1,27 @@
+.y.,group1,group2,p,p.adj,adj.signif,p.bonf,p.signif,method,cell_type
+value,Conv,PP,NA,0.0477,*,0.6201,,Mixed_effect,White Blood Cells
+value,Conv,FP,NA,1e-4,****,0.0013,**,Mixed_effect,White Blood Cells
+value,Conv,FP+7,NA,0.0023,**,0.0299,*,Mixed_effect,White Blood Cells
+value,Conv,FP,NA,1e-4,****,0.0013,**,Mixed_effect,Red Blood Cells
+value,Conv,FP+7,NA,9e-4,***,0.0117,*,Mixed_effect,Red Blood Cells
+value,Conv,PP,NA,0.0294,*,0.3822,,Mixed_effect,Haemoglobin
+value,Conv,FP,NA,1e-4,****,0.0013,**,Mixed_effect,Haemoglobin
+value,Conv,FP+7,NA,1e-4,****,0.0013,**,Mixed_effect,Haemoglobin
+value,Conv,FP,NA,1e-4,***,0.0013,**,Mixed_effect,Mean Corpuscular Volume
+value,Conv,FP+7,NA,1e-4,****,0.0013,**,Mixed_effect,Mean Corpuscular Volume
+value,Conv,PP,NA,0.0104,*,0.1352,,Mixed_effect,Mean Corpuscular Haemoglobin
+value,Conv,FP+14,NA,0.038,*,0.494,,Mixed_effect,Mean Corpuscular Haemoglobin
+value,Conv,PP,NA,0.0418,*,0.5434,,Mixed_effect,MCH Concentration
+value,Conv,FP,NA,6e-4,***,0.0078,**,Mixed_effect,MCH Concentration
+value,Conv,FP,NA,1e-4,****,0.0013,**,Mixed_effect,Platelets
+value,Conv,FP+14,NA,1e-4,****,0.0013,**,Mixed_effect,Platelets
+value,Conv,FP,NA,1e-4,****,0.0013,**,Mixed_effect,Neutrophils
+value,Conv,FP+7,NA,0.0109,*,0.1417,,Mixed_effect,Neutrophils
+value,Conv,PP,NA,0.0353,*,0.4589,,Mixed_effect,Lymphocytes
+value,Conv,FP,NA,1e-4,****,0.0013,**,Mixed_effect,Lymphocytes
+value,Conv,FP+7,NA,0.0035,**,0.0455,*,Mixed_effect,Monocytes
+value,Conv,FP,NA,1e-4,****,0.0013,**,Mixed_effect,Eosinophils
+value,Conv,FP+7,NA,1e-4,****,0.0013,**,Mixed_effect,Eosinophils
+value,Conv,FP,NA,0.0315,*,0.4095,,Mixed_effect,Basophils
+value,Conv,FP+14,NA,0.0213,*,0.2769,,Mixed_effect,Basophils
+value,Conv,FP+7,NA,0.0108,*,0.1404,,Mixed_effect,Mean Platelet Volume
