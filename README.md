@@ -22,6 +22,8 @@ Also included is R code used to produce the figures for the manuscript published
   - `ggpubr`
   - `purrr`
   - `ggforce`
+  - `ggview`
+  - `ggridges`
 
 ## Usage
 
