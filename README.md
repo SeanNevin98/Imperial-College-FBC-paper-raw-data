@@ -7,7 +7,7 @@ INSTINCT is a longitudinal prospective community study (20/NW/0231) that recruit
 identified by the UK Health Security Agency contact tracing program between April 2020 and April 2021, encompassing the Pre-Alpha 
 and Alpha variant SARS-CoV-2 infection waves.
 
-Also included is R code used to produce the figures for the manuscript published in *PLOS ONE*, 2025.
+Also included is R code used to produce the figures for the Imperial College London manuscript, published in the journal 'Infection', in 2026.
 
 ## Requirements
 
@@ -37,4 +37,4 @@ Not applicable
 
 If using this data or code, please cite:
 
-[Full citation for the PLOS ONE paper]
+[Full citation for Infection paper]
