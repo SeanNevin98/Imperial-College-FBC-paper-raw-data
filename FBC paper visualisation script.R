@@ -464,6 +464,7 @@ print(FigS1_violin)
 
 
 
+
 # Figure S3 ---------------------------------------------------------------
 # Visualising data distributions using historgram and QQ plots
 
@@ -535,10 +536,11 @@ for (i in seq_along(var_list)) {
 }
 
 # Arrange plots
-(individual_histograms <- ggarrange(plotlist = hist_list,
+# Figure S3 - histograms of FBC parameters
+(FigureS3 <- ggarrange(plotlist = hist_list,
                                    nrow = 5, ncol = 3))
 
-#Not shown in final manuscript
+#Not shown in final manuscript - QQ plots of parameters
 (individual_qqplots <- ggarrange(plotlist = qq_list,
                                 nrow = 5, ncol = 3))
   
@@ -548,7 +550,6 @@ for (i in seq_along(var_list)) {
     bottom = ggpubr::text_grob("Theoretical Quantiles")
   )
 )
-
 
 
 # Figure S4 ---------------------------------------------------------------
@@ -569,7 +570,7 @@ unique(data_sub$variable)
 unique(data$inf_time)
   
 #use facet_grid to plot each inf timepoint.
-(density_plot_comparison <- 
+(FigureS4 <- density_plot_comparison <- 
   ggplot(data_sub, aes(x = value, y = inf_time)) +
     geom_density_ridges(
       alpha = 0.7,
@@ -605,7 +606,7 @@ my_theme <- theme_classic(base_size = 12) +
                                     fill = NA, 
                                     linewidth = 1))
 
-ggplot(data = df, aes(x = `MPV_FP+7`, y = `Platelets_FP+14`)) +
+(FigureS2 <- ggplot(data = df, aes(x = `MPV_FP+7`, y = `Platelets_FP+14`)) +
   geom_point() +
   geom_smooth(method = "lm") +
   stat_cor(aes(label = paste(..rr.label.., ..r.label.., ..p.label.., sep = "~`,`~")), 
@@ -613,7 +614,7 @@ ggplot(data = df, aes(x = `MPV_FP+7`, y = `Platelets_FP+14`)) +
   my_theme +
   labs(x = "Mean Platelet Volume (MPV) at FP+7", 
        y = "Platelet count at FP+14")
-
+)
 
 
 
@@ -646,4 +647,5 @@ cat("Adjusted R-squared:", round(adj_r_squared, 4), "\n")
 
 
 # END OF SCRIPT -----------------------------------------------------------
+
 
