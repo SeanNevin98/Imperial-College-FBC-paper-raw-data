@@ -1,7 +1,6 @@
 #PROLOG
-#Purpose: Plot Figure 1a, Figure 2, and Figure S1, Figure S2, Figure S3, Figure S4, in the PlosOne Full Blood Count manuscript, 2025.
+#Purpose: Plot Figure 1B, Figure 2, and Figure S1, Figure S2, Figure S3, Figure S4.
 #Edited by: Sean Nevin
-#Last Edit: 15.09.2025
 
 rstudioapi::restartSession()
 #clear environment
@@ -19,7 +18,6 @@ library(purrr)
 library(ggforce)
 library(ggview)
 library(ggridges) #for ridge plots - overlaid density plots. 
-
 
 setwd() #set wd to directory containing raw data file. 
 
@@ -49,23 +47,37 @@ str(vk_data)
 # PLOTTING SECTION --------------------------------------------------------
 # Figure 1B ---------------------------------------------------------------
 
-Fig1B <- ggplot(data = vk_data, aes(x=inf_time, y=log10_value)) +
-  geom_point(aes(group=Sample),color="black",size=1.75,shape=19) + 
-  geom_hline(yintercept = log10(8), colour="sienna1",linetype = 2, linewidth=1) +
-  geom_line(data=vk_data[!is.na(vk_data$log10_value),], aes(group=Sample)) +
+
+(Fig1B <- ggplot(data = vk_data, aes(x = inf_time, y = log10_value)) +
+  geom_point(
+    aes(group = Sample),
+    color = "grey40",
+    size = 1.5,
+    shape = 19
+  ) +
+  geom_hline(
+    yintercept = log10(8),
+    colour = "sienna1",
+    linetype = 2,
+    linewidth = 1
+  ) +
+  geom_line(
+    data = vk_data[!is.na(vk_data$log10_value), ],
+    aes(group = Sample),
+    linewidth = 0.75,
+    alpha = 0.75,
+    colour = "grey70"
+  ) +
   xlab("Timepoint") +
-  ylab("Log10 Viral Copy Number / mL") +
-  scale_x_discrete(limits=timings)+
-  ggtitle("Viral RNA Load Kinetics by Timepoint") +
+  ylab("Viral Copy Number (Log10 RNA copies/mL)") +
+  scale_x_discrete(limits = timings) +
   theme_classic(base_size = 22) +
-  theme(panel.border = element_rect(color = "black",
-                                    fill = NA,linewidth = 1),
-        text = element_text(face = "bold"))
-
-print(Fig1B)
-
-
-
+  theme(panel.border = element_rect(
+    color = "black",
+    fill = NA,
+    linewidth = 1
+  ))
+)
 
 # Figure 2 and S1 ---------------------------------------------------------
 
@@ -79,7 +91,7 @@ print(Fig1B)
 raw_data <- read_excel("GitHub Repository - FBC paper raw data.xlsx")
 
 # Load in table of statistical comparison test results - analysed in GraphPad
-signif_comp <- read_csv("signif comp with bonferroni adj values.csv")
+signif_comp <- read_csv("Statistical comparisons Dunnets test with Bonferroni correction.csv")
 #Remove NA rows
 signif_comp <- signif_comp %>% drop_na(p.signif)
 
@@ -306,7 +318,7 @@ harry_plotter <- function(cell_query, rect_sf=20, text_sf=1) {
     test_plot <- ggplot(data[data$variable == cell_query,], aes(inf_time, value)) + 
       facet_grid(. ~ variable) +
       geom_line(aes(group = Sample), color="gray70") +
-      geom_point(aes(group = Sample), color="gray58") +
+      geom_point(aes(group = Sample), color="gray40") +
       geom_violin(trim = FALSE, colour = "black", fill = NA, scale = "area") +
       theme_pubr() +
       ylim(0,NA) +
@@ -322,9 +334,8 @@ harry_plotter <- function(cell_query, rect_sf=20, text_sf=1) {
                    se=T, color='steelblue4',
                    fill='steelblue4')+
       theme_classic(base_size = 16) +
-      theme(panel.border = element_rect(color = "black", fill = NA, linewidth = 0.5),
-            strip.text.x = element_text(face = "bold"),
-            axis.text = element_text(face = "bold"))
+      theme(panel.border = element_rect(color = "black", fill = NA, linewidth = 1),
+            strip.text.x = element_text(face = "bold"))
     
     
     
@@ -334,7 +345,7 @@ harry_plotter <- function(cell_query, rect_sf=20, text_sf=1) {
     test_plot <- ggplot(data[data$variable == cell_query,], aes(inf_time, value)) + 
       facet_grid(. ~ variable) +
       geom_line(aes(group = Sample), color="gray70") +
-      geom_point(aes(group = Sample), color="gray58") +
+      geom_point(aes(group = Sample), color="gray40") +
       geom_violin(trim = FALSE, colour = "black", fill = NA, scale = "area") +
       theme_pubr() +
       ylim(0,NA) +
@@ -346,9 +357,8 @@ harry_plotter <- function(cell_query, rect_sf=20, text_sf=1) {
                    se=T, color='steelblue4',
                    fill='steelblue4')+
       theme_classic(base_size = 16) +
-      theme(panel.border = element_rect(color = "black", fill = NA, linewidth = 0.5),
-            strip.text.x = element_text(face = "bold"),
-            axis.text = element_text(face = "bold"))
+      theme(panel.border = element_rect(color = "black", fill = NA, linewidth = 1),
+            strip.text.x = element_text(face = "bold"))
     
     
   }
@@ -362,75 +372,92 @@ harry_plotter <- function(cell_query, rect_sf=20, text_sf=1) {
 # Figure 2 ----------------------------------------------------------------
 
 # Plot the FBC data as a ggarrange object
-Fig2_violin <- ggpubr::ggarrange(harry_plotter("White Blood Cells", text_sf = 0.5, rect_sf = 110) +
-                            geom_hline(yintercept = 4.2, colour = "sienna1", linetype = 2, linewidth = 0.5)+
-                            geom_hline(yintercept = 11.2, colour = "sienna1", linetype = 2, linewidth = 0.5)+
-                            ylim(1.8,NA)+
-                            labs(y = "10^9/L"),
-                          harry_plotter("Neutrophils", text_sf = 0.5, rect_sf=15)+
-                            geom_hline(yintercept = 2, colour = "sienna1", linetype = 2, linewidth = 0.5)+
-                            geom_hline(yintercept = 7.1, colour = "sienna1", linetype = 2, linewidth = 0.5)+
-                            labs(y = "10^9/L"),
-                          harry_plotter("Lymphocytes", text_sf = 0.2)+ #, text_sf = 0.2, rect_sf = 15)+
-                            geom_hline(yintercept = 1.1, colour = "sienna1", linetype = 2, linewidth = 0.5)+
-                            geom_hline(yintercept = 3.6, colour = "sienna1", linetype = 2, linewidth = 0.5)+
-                            labs(y = "10^9/L")+
-                            ylim(0.4,NA),
-                          harry_plotter("Monocytes", text_sf = 0.4)+
-                            geom_hline(yintercept = 0.3, colour = "sienna1", linetype = 2, linewidth = 0.5)+
-                            geom_hline(yintercept = 0.9, colour = "sienna1", linetype = 2, linewidth = 0.5)+
-                            labs(y = "10^9/L"),
-                          harry_plotter("Platelets", rect_sf=15, text_sf=25)+
-                            geom_hline(yintercept = 130, colour = "sienna1", linetype = 2, linewidth = 0.5)+
-                            geom_hline(yintercept = 400, colour = "sienna1", linetype = 2, linewidth = 0.5)+
-                            ylim(60, NA)+
-                            labs(y = "10^9/L"),
-                          harry_plotter("Mean Platelet Volume", text_sf = 0.5, rect_sf = 80) +
-                            geom_hline(yintercept = 7.5, colour="sienna1", linetype = 2, linewidth = 0.5)+
-                            geom_hline(yintercept = 11.5, colour="sienna1", linetype = 2, linewidth = 0.5)+
-                            ylim(5, NA)+
-                            labs(y = "fL"),
-                          nrow = 2,
-                          ncol = 3
+Fig2_violin <- ggpubr::ggarrange(
+  
+  harry_plotter("White Blood Cells", text_sf = 0.5, rect_sf = 110) +
+    geom_hline(yintercept = 4.2, colour = "sienna1", linetype = 2, linewidth = 0.5) +
+    geom_hline(yintercept = 11.2, colour = "sienna1", linetype = 2, linewidth = 0.5) +
+    ylim(1.8, NA) +
+    labs(y = expression(10^9/L)),
+  
+  harry_plotter("Neutrophils", text_sf = 0.5, rect_sf = 15) +
+    geom_hline(yintercept = 2, colour = "sienna1", linetype = 2, linewidth = 0.5) +
+    geom_hline(yintercept = 7.1, colour = "sienna1", linetype = 2, linewidth = 0.5) +
+    labs(y = expression(10^9/L)),
+  
+  harry_plotter("Lymphocytes", text_sf = 0.2) +
+    geom_hline(yintercept = 1.1, colour = "sienna1", linetype = 2, linewidth = 0.5) +
+    geom_hline(yintercept = 3.6, colour = "sienna1", linetype = 2, linewidth = 0.5) +
+    ylim(0.4, NA) +
+    labs(y = expression(10^9/L)),
+  
+  harry_plotter("Monocytes", text_sf = 0.4) +
+    geom_hline(yintercept = 0.3, colour = "sienna1", linetype = 2, linewidth = 0.5) +
+    geom_hline(yintercept = 0.9, colour = "sienna1", linetype = 2, linewidth = 0.5) +
+    labs(y = expression(10^9/L)),
+  
+  harry_plotter("Platelets", rect_sf = 15, text_sf = 25) +
+    geom_hline(yintercept = 130, colour = "sienna1", linetype = 2, linewidth = 0.5) +
+    geom_hline(yintercept = 400, colour = "sienna1", linetype = 2, linewidth = 0.5) +
+    ylim(60, NA) +
+    labs(y = expression(10^9/L)),
+  
+  harry_plotter("Mean Platelet Volume", text_sf = 0.5, rect_sf = 80) +
+    geom_hline(yintercept = 7.5, colour = "sienna1", linetype = 2, linewidth = 0.5) +
+    geom_hline(yintercept = 11.5, colour = "sienna1", linetype = 2, linewidth = 0.5) +
+    ylim(5, NA) +
+    labs(y = "fL"),
+  
+  nrow = 2,
+  ncol = 3
 )
 
 print(Fig2_violin)
 
 
-#Figure S1
+
+# Figure S1
 FigS1_violin <- ggpubr::ggarrange(
-  harry_plotter("Eosinophils", rect_sf = 20, text_sf=5)+
-    labs(y = "10^9/L"),
-  harry_plotter("Basophils", rect_sf = 10)+
-    labs(y = "10^9/L"),
-  harry_plotter("Red Blood Cells", rect_sf = 30, text_sf = 0.1)+
-    geom_hline(yintercept = 3.73, colour = "sienna1", linetype = 2, linewidth = 0.5)+
-    geom_hline(yintercept = 5.46, colour = "sienna1", linetype = 2, linewidth = 0.5)+
-    ylim(3.5, NA)+
-    labs(y = "10^12/L"),
-  harry_plotter("Haemoglobin", rect_sf = 25, text_sf= 4)+
-    geom_hline(yintercept = 114, colour = "sienna1", linetype = 2, linewidth = 0.5)+
-    geom_hline(yintercept = 168, colour = "sienna1", linetype = 2, linewidth = 0.5)+
-    ylim(70, NA)+
-    labs(y = "g/L"),
-  harry_plotter("Mean Corpuscular Volume", rect_sf = 100, text_sf=2)+
-    geom_hline(yintercept = 83.5, colour = "sienna1", linetype = 2, linewidth = 0.5)+
-    geom_hline(yintercept = 99.5, colour = "sienna1", linetype = 2, linewidth = 0.5)+
-    ylim(80, NA)+
-    labs(y = "fL"),
-  harry_plotter("Mean Corpuscular Haemoglobin", rect_sf = 50, text_sf = 0.8)+
-    geom_hline(yintercept = 27.5, colour = "sienna1", linetype = 2, linewidth = 0.5)+
-    geom_hline(yintercept = 33.1, colour = "sienna1", linetype = 2, linewidth = 0.5)+
-    ylim(19.8, NA)+
-    labs(y = "pg"),
-  harry_plotter("MCH Concentration", text_sf = 5, rect_sf = 50)+
-    geom_hline(yintercept = 315, colour="sienna1",linetype = 2 , linewidth =0.5)+
-    geom_hline(yintercept = 350, colour = "sienna1", linetype = 2, linewidth = 0.5)+
-    ylim(310, NA)+
-    labs(y = "g/L"),
-  ncol =3,
-  nrow =3 
-)  
+  
+  harry_plotter("Eosinophils", rect_sf = 20, text_sf = 5) +
+    labs(y = expression(10^9/L)),
+  
+  harry_plotter("Basophils", rect_sf = 10) +
+    labs(y = expression(10^9/L)),
+  
+  harry_plotter("Red Blood Cells", rect_sf = 30, text_sf = 0.1) +
+    geom_hline(yintercept = 3.73, colour = "sienna1", linetype = 2, linewidth = 0.5) +
+    geom_hline(yintercept = 5.46, colour = "sienna1", linetype = 2, linewidth = 0.5) +
+    ylim(3.5, NA) +
+    labs(y = expression(10^12/L)),
+  
+  harry_plotter("Haemoglobin", rect_sf = 25, text_sf = 4) +
+    geom_hline(yintercept = 114, colour = "sienna1", linetype = 2, linewidth = 0.5) +
+    geom_hline(yintercept = 168, colour = "sienna1", linetype = 2, linewidth = 0.5) +
+    ylim(70, NA) +
+    labs(y = expression(g/L)),
+  
+  harry_plotter("Mean Corpuscular Volume", rect_sf = 100, text_sf = 2) +
+    geom_hline(yintercept = 83.5, colour = "sienna1", linetype = 2, linewidth = 0.5) +
+    geom_hline(yintercept = 99.5, colour = "sienna1", linetype = 2, linewidth = 0.5) +
+    ylim(80, NA) +
+    labs(y = expression(fL)),
+  
+  harry_plotter("Mean Corpuscular Haemoglobin", rect_sf = 50, text_sf = 0.8) +
+    geom_hline(yintercept = 27.5, colour = "sienna1", linetype = 2, linewidth = 0.5) +
+    geom_hline(yintercept = 33.1, colour = "sienna1", linetype = 2, linewidth = 0.5) +
+    ylim(19.8, NA) +
+    labs(y = expression(pg)),
+  
+  harry_plotter("MCH Concentration", text_sf = 5, rect_sf = 50) +
+    geom_hline(yintercept = 315, colour = "sienna1", linetype = 2, linewidth = 0.5) +
+    geom_hline(yintercept = 350, colour = "sienna1", linetype = 2, linewidth = 0.5) +
+    ylim(310, NA) +
+    labs(y = expression(g/L)),
+  
+  ncol = 3,
+  nrow = 3
+)
 
 print(FigS1_violin)
 
@@ -486,16 +513,17 @@ for (i in seq_along(var_list)) {
     labs(x = var,
          y = "Density",
          title = paste(var)) +
-    theme_classic(base_size = 13.5)
+    theme_classic(base_size = 13.5) +
+    theme(plot.title = element_text(face = "bold"))
   
   # QQ plot
   p_qq <- ggplot(data_sub, aes(sample = value)) +
     stat_qq(size = 1.2, colour = "blue") +
     stat_qq_line(colour = "red", linewidth = 1) +
-    labs(x = "Theoretical Quantiles",
-         y = "Sample Quantiles",
-         title = paste(var)) +
-    theme_classic(base_size = 13.5)
+    labs(title = paste(var)) +
+    theme_classic(base_size = 13.5)  +
+    theme(plot.title = element_text(face = "bold"),
+          axis.title = element_blank())
   
   # Show in loop
   print(p_hist)
@@ -513,12 +541,19 @@ for (i in seq_along(var_list)) {
 #Not shown in final manuscript
 (individual_qqplots <- ggarrange(plotlist = qq_list,
                                 nrow = 5, ncol = 3))
+  
+(qqplots_mod <- ggpubr::annotate_figure(
+    individual_qqplots,
+    left = ggpubr::text_grob("Sample Quantiles", rot = 90),
+    bottom = ggpubr::text_grob("Theoretical Quantiles")
+  )
+)
 
 
 
 # Figure S4 ---------------------------------------------------------------
 
-#Use ggridge for easier comparison of data distribitions. 
+#Use ggridge for easier comparison of data distributions. 
 # Optional: order timepoints if needed
 timepoints <- c("FP","FP+7","FP+14","Conv")
 data$inf_time <- factor(data$inf_time, levels = timepoints)
@@ -545,9 +580,11 @@ unique(data$inf_time)
                nrow = 5, 
                ncol = 3) +  # one row per variable, one column per timepoint
     labs(x = "FBC measurement value",
-         y = "Density", 
-         title = "Data distributions compared across infection timepoints") +
-    theme_classic(base_size = 13.5)) 
+         y = "Density") + 
+    theme_classic(base_size = 13.5) +
+    theme(panel.border = element_rect(color = "black", fill = NA, linewidth = 1),
+          strip.text.x = element_text(face = "bold"))
+  ) 
 
 
 
@@ -564,10 +601,9 @@ df <- raw_data %>%
   mutate_at(c(1:77), as.numeric)
 
 my_theme <- theme_classic(base_size = 12) +
-  theme(text = element_text(face = "bold"),
-        panel.border = element_rect(colour = "black",
+  theme(panel.border = element_rect(colour = "black",
                                     fill = NA, 
-                                    linewidth = 2))
+                                    linewidth = 1))
 
 ggplot(data = df, aes(x = `MPV_FP+7`, y = `Platelets_FP+14`)) +
   geom_point() +
@@ -575,9 +611,10 @@ ggplot(data = df, aes(x = `MPV_FP+7`, y = `Platelets_FP+14`)) +
   stat_cor(aes(label = paste(..rr.label.., ..r.label.., ..p.label.., sep = "~`,`~")), 
            method = "pearson", size = 6) +
   my_theme +
-  labs(title = "Correlation between MPV at FP+7 and Platelet count at FP+14",
-       x = "Mean Platelet Volume at FP+7", 
+  labs(x = "Mean Platelet Volume (MPV) at FP+7", 
        y = "Platelet count at FP+14")
+
+
 
 
 # Run linear regression
@@ -609,3 +646,4 @@ cat("Adjusted R-squared:", round(adj_r_squared, 4), "\n")
 
 
 # END OF SCRIPT -----------------------------------------------------------
+
